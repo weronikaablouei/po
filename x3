@@ -1,0 +1,265 @@
+#include<iostream>
+#include<windows.h>
+#include<conio.h>
+using namespace std;
+
+class Node {
+public:
+    int dane;
+    Node* left;
+    Node* right;
+
+    Node() {
+        dane = 0;
+        left = NULL;
+        right = NULL;
+    }
+
+    Node(int d) {
+        dane = d;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+class BST {
+public:
+    Node* root;
+
+    BST() {
+        root = NULL;
+    }
+
+    // SPRAWDZ CZY PUSTE
+    bool jestPuste() {
+        return root == NULL;
+    }
+
+    // DODAJ WEZEL
+    Node* dodajWezel(Node* t, Node* new_node) {
+        if (t == NULL) {
+            t = new_node;
+            cout << "Insertion successful" << endl;
+            return t;
+        }
+
+        if (new_node->dane < t->dane)
+            t->left = dodajWezel(t->left, new_node);
+        else if (new_node->dane > t->dane)
+            t->right = dodajWezel(t->right, new_node);
+        else {
+            cout << "No duplicate values allowed!" << endl;
+            return t;
+        }
+        return t;
+    }
+
+    // WYSZUKAJ ELEMENT
+    bool wyszukaj(int d) {
+        Node* temp = root;
+        Node* parent = root;
+
+        while (temp != NULL && d != temp->dane) {
+            parent = temp;
+            if (d < temp->dane)
+                temp = temp->left;
+            else
+                temp = temp->right;
+        }
+
+        if (temp != NULL)
+            return true;
+
+        Node* newNode = new Node(d);
+        if (parent->dane > d)
+            parent->left = newNode;
+        else
+            parent->right = newNode;
+
+        return false;
+    }
+
+    // PRE ORDER
+    void preOrder(Node* t) {
+        if (t == NULL)
+            return;
+        cout << t->dane << " ";
+        preOrder(t->left);
+        preOrder(t->right);
+    }
+
+    // IN ORDER
+    void inOrder(Node* t) {
+        if (t == NULL)
+            return;
+        inOrder(t->left);
+        cout << t->dane << " ";
+        inOrder(t->right);
+    }
+
+    // WYSOKOSC DRZEWA
+    int wysokosc(Node* t) {
+        if (t == NULL)
+            return -1;
+        else {
+            int lewyWYSOK = wysokosc(t->left);
+            int prawyWYSOK = wysokosc(t->right);
+
+            return max(lewyWYSOK, prawyWYSOK) + 1;
+        }
+    }
+
+    // WARTOSC MINIMALNA
+    Node* minValueNode(Node* t) {
+        Node* temp1 = t;
+
+        while (temp1->left != NULL)
+            temp1 = temp1->left;
+
+        return temp1;
+    }
+
+    // USUN WEZEL
+    Node* deleteNode(Node* t, int d) {
+        if (t == NULL)
+            return NULL;
+        else if (d < t->dane)
+            t->left = deleteNode(t->left, d);
+        else if (d > t->dane)
+            t->right = deleteNode(t->right, d);
+        else {
+            if (t->left == NULL) {
+                Node* temp = t->right;
+                delete t;
+                return temp;
+            }
+            else if (t->right == NULL) {
+                Node* temp = t->left;
+                delete t;
+                return temp;
+            }
+            else {
+                Node* temp = minValueNode(t->right);
+                t->dane = temp->dane;
+                t->right = deleteNode(t->right, temp->dane);
+            }
+        }
+        return t;
+    }
+
+    // WYŚWIETL DRZEWO
+    void wyswietlDrzewoRekurencyjnie(Node* root, int poziom, const string& prefix = "") {
+        if (root == NULL)
+            return;
+
+        const int odstepMiedzyWierzcholkami = 4;
+        const int odstepMiedzyPoziomami = 10;
+
+        wyswietlDrzewoRekurencyjnie(root->right, poziom + 1, "R");
+
+        for (int i = 0; i < poziom * odstepMiedzyPoziomami; i++)
+            cout << " ";
+        cout << prefix << root->dane << "\n";
+
+        wyswietlDrzewoRekurencyjnie(root->left, poziom + 1, "L");
+    }
+
+    // WYŚWIETL DRZEWO
+    void Show_Tree() {
+        wyswietlDrzewoRekurencyjnie(root, 0);
+    }
+};
+
+int main() {
+    BST obj;
+    int x, wartosc;
+
+    do {
+        
+        cout << "1. Add node" << endl;
+        cout << "2. Find node" << endl;
+        cout << "3. Delete node" << endl;
+        cout << "4. Show inOrder and preOrder" << endl;
+        cout << "5. Tree height" << endl;
+        cout << "6. Display Tree" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Choose operation (enter only numbers): ";
+        cin >> x;
+        Node* new_node = new Node();
+
+        
+        switch (x) {
+        case 0:
+            break;
+        case 1:
+            cout << "Enter value: ";
+            cin >> wartosc;
+            new_node->dane = wartosc;
+            obj.root = obj.dodajWezel(obj.root, new_node);
+            cout << endl;
+            break;
+
+        case 2:
+            cin >> wartosc;
+            obj.wyszukaj(wartosc);
+            if (new_node != NULL) {
+                cout << "\nValue found" << endl;
+            }
+            else {
+                cout << "\nValue not found" << endl;
+            }
+            break;
+
+        case 3:
+            cout << "Values in tree: \n";
+            cout << "--------------------------------------------------------" << endl;
+            obj.Show_Tree(); cout << endl;
+            cout << "--------------------------------------------------------"<< endl;
+            cout << "Delete: ";
+            cin >> wartosc;
+            obj.wyszukaj(wartosc);
+
+            if (new_node != NULL) {
+                obj.deleteNode(obj.root, wartosc);
+                cout << "\nValue deleted\n" << endl;
+            }
+            else{
+                cout << "\nValue not found\n" << endl;
+            }
+            
+            break;
+
+        case 4:
+            cout << "inOrder: " << endl;
+            obj.inOrder(obj.root);
+            cout << endl;
+            cout << endl;
+            cout << "preOrder: " << endl;
+            obj.preOrder(obj.root);
+            cout << endl;
+            cout << endl;
+            break;
+
+        case 5:
+            cout << "\nTree height: " << obj.wysokosc(obj.root) << endl << endl;
+            break;
+
+        case 6:
+            cout << "\nDisplaying tree:\n";
+            obj.Show_Tree();
+            cout << endl;
+            
+            break;
+
+        default:
+            cout << "Pick correct operation!";
+        }
+
+        
+        _getch();
+        system("cls");
+    } while (x != 0);
+    
+    
+    return 0;
+}
