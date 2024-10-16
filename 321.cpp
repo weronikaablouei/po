@@ -2,11 +2,12 @@
 #include <array>
 #include <functional>
 #include <iostream>
+#include <accountssettingspaneinterop.h>
 #include <string_view>
  
+//komentarz Aleksander Wolak
 int main()
 {
-    std::array<int, 10> s{5, 7, 4, 2, 8, 6, 1, 9, 0, 3};
  
     auto print = [&s](std::string_view const rem)
     {
@@ -14,12 +15,15 @@ int main()
             std::cout << a << ' ';
         std::cout << ": " << rem << '\n';
     };
+
+    std::array<int, 10> s{ 5, 7, 4, 2, 8, 6, 1, 9, 0, 3 };
+
  
     std::sort(s.begin(), s.end());
-    print("sorted with the default operator<");
+    print("sorted with the defaultt operator<");
  
     std::sort(s.begin(), s.end(), std::greater<int>());
-    print("sorted with the standard library compare function object");
+    print("sorted with the standard  compare function object");
  
     struct
     {
@@ -28,7 +32,6 @@ int main()
     customLess;
  
     std::sort(s.begin(), s.end(), customLess);
-    print("sorted with a custom function object");
  
     std::sort(s.begin(), s.end(), [](int a, int b)
                                   {
