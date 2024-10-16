@@ -5,6 +5,7 @@
 #include <string_view>
  
 int main()
+
 {
     std::array<int, 10> s{5, 7, 4, 2, 8, 6, 1, 9, 0, 3};
  
@@ -16,7 +17,7 @@ int main()
     };
  
     std::sort(s.begin(), s.end());
-    print("sorted with the default operator<");
+    print("rahhhhhh!!!!");
  
     std::sort(s.begin(), s.end(), std::greater<int>());
     print("sorted with the standard library compare function object");
@@ -34,5 +35,5 @@ int main()
                                   {
                                       return a > b;
                                   });
-    print("sorted with a lambda expression");
+    print("zmienilam >:)");
 }
