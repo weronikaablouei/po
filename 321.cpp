@@ -7,7 +7,9 @@
  
 //komentarz Aleksander Wolak
 int main()
+
 {
+    std::array<int, 10> s{5, 7, 4, 2, 8, 6, 1, 9, 0, 3};
  
     auto print = [&s](std::string_view const rem)
     {
@@ -20,6 +22,7 @@ int main()
 
  
     std::sort(s.begin(), s.end());
+    print("rahhhhhh!!!!");
     print("sorted with the defaultt operator<");
  
     std::sort(s.begin(), s.end(), std::greater<int>());
@@ -38,4 +41,5 @@ int main()
                                       return a > b;
                                   });
     print("sorted with a lambda expression");
+    int x = 5 + 4;
 }
